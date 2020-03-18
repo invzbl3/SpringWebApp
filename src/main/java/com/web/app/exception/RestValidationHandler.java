@@ -1,5 +1,8 @@
 package com.web.app.exception;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,12 +14,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Date;
 
 @ControllerAdvice
 public class RestValidationHandler {
+
+    private MessageSource messageSource;
+    @Autowired
+    public RestValidationHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
     // method to handle validation error
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -35,6 +44,7 @@ public class RestValidationHandler {
 
         BindingResult result = mNotValidException.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
+
         for (FieldError error : fieldErrors) {
             FieldValidationError fError = processFieldError(error);
             List<FieldValidationError> fValidationErrorsList = fErrorDetails.getErrors().get(error.getField());
@@ -53,9 +63,12 @@ public class RestValidationHandler {
         FieldValidationError fieldValidationError =
                 new FieldValidationError();
         if (error != null) {
+            Locale currentLocale = LocaleContextHolder.getLocale();
+            String msg = messageSource.getMessage(
+                    Objects.requireNonNull(error.getDefaultMessage()), null, currentLocale);
             fieldValidationError.setFiled(error.getField());
             fieldValidationError.setType(TrayIcon.MessageType.ERROR);
-            fieldValidationError.setMessage(error.getDefaultMessage());
+            fieldValidationError.setMessage(msg);
         }
         return fieldValidationError;
     }
