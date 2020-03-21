@@ -10,7 +10,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.
         WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -29,11 +32,10 @@ public class SpringSecurityConfiguration_InMemory extends WebSecurityConfigurerA
 
     @Bean
     public UserDetailsService userDetailsService() {
-
-        User.UserBuilder users = User.withDefaultPasswordEncoder();
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(users.username("user").password("password").roles("USER").build());
-        manager.createUser(users.username("admin").password("password").roles("USER", "ADMIN").build());
+        manager.createUser(User.withUsername("user").password(encoder.encode("password")).roles("USER").build());
+        manager.createUser(User.withUsername("admin").password(encoder.encode("password")).roles("USER", "ADMIN").build());
         return manager;
 
     }
