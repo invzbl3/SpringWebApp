@@ -9,35 +9,26 @@ import org.springframework.security.config.annotation.authentication.builders.
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.
         WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class SpringSecurityConfiguration_InMemory extends WebSecurityConfigurerAdapter {
-   /* @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.inMemoryAuthentication().
-                withUser("user").password("password")
-                .roles("USER");
-        auth.
-                inMemoryAuthentication().withUser("admin").
-                password("password")
-                .roles("USER", "ADMIN");
-    }*/
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user").password(encoder.encode("password")).roles("USER").build());
-        manager.createUser(User.withUsername("admin").password(encoder.encode("password")).roles("USER", "ADMIN").build());
-        return manager;
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.inMemoryAuthentication()
+                .withUser("user").password(passwordEncoder().encode("password"))
+                .roles("USER");
+        auth.inMemoryAuthentication()
+                .withUser("admin").password(passwordEncoder().encode("password"))
+                .roles("USER", "ADMIN");
     }
 
     @Override
