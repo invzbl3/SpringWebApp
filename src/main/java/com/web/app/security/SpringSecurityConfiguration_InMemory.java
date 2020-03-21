@@ -10,17 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.
         WebSecurityConfigurerAdapter;
 
 @Configuration
-/*@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)*/ // no longer exists since Spring 2.0
 public class SpringSecurityConfiguration_InMemory extends WebSecurityConfigurerAdapter {
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.inMemoryAuthentication().
-                withUser("user").password("password")
+                withUser("user").password("{noop}password")
                 .roles("USER");
         auth.
                 inMemoryAuthentication().withUser("admin").
-                password("password")
+                password("{noop}password")
                 .roles("USER", "ADMIN");
     }
 
