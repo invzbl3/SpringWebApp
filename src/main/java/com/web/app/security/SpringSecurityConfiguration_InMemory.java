@@ -9,25 +9,20 @@ import org.springframework.security.config.annotation.authentication.builders.
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.
         WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SpringSecurityConfiguration_InMemory extends WebSecurityConfigurerAdapter {
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
+        PasswordEncoder encoder =
+                PasswordEncoderFactories.createDelegatingPasswordEncoder();
         auth.inMemoryAuthentication()
-                .withUser("user").password(passwordEncoder().encode("password"))
+                .withUser("user").password(encoder.encode("password"))
                 .roles("USER");
         auth.inMemoryAuthentication()
-                .withUser("admin").password(passwordEncoder().encode("password"))
+                .withUser("admin").password(encoder.encode("password"))
                 .roles("USER", "ADMIN");
     }
 
