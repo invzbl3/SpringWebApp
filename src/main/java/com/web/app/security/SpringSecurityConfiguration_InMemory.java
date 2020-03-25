@@ -1,7 +1,7 @@
+/*
 package com.web.app.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.
@@ -43,4 +43,4 @@ public class SpringSecurityConfiguration_InMemory extends WebSecurityConfigurerA
                 .csrf()
                 .disable();
     }
-}
+}*/
