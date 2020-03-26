@@ -1,6 +1,7 @@
 package com.web.app.security;
 
 import com.web.app.service.UserInfoDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,15 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-
 @Configuration
 @EnableWebSecurity
-
 // Securing the H2 console
-@ConditionalOnExpression("#{environment.getProperty('security.basic.authorize.mode') eq('authenticated') && environment.getProperty('security.basic.enabled') eq('true')}")
+//@ConditionalOnExpression("#{environment.getProperty('security.basic.authorize.mode') eq('authenticated') && environment.getProperty('security.basic.enabled') eq('true')}")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfiguration_Database
         extends WebSecurityConfigurerAdapter {
+
     private final UserInfoDetailsService userInfoDetailsService;
 
     public SpringSecurityConfiguration_Database(UserInfoDetailsService userInfoDetailsService) {
@@ -31,6 +31,19 @@ public class SpringSecurityConfiguration_Database
             throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(userInfoDetailsService);
+     /*   PasswordEncoder encoder =
+                PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        authenticationManagerBuilder
+                .userDetailsService(userInfoDetailsService)
+                .and()
+                .inMemoryAuthentication()
+                .withUser("user")
+                .password(encoder.encode("password"))
+                .roles("USER")
+                .and()
+                .withUser("admin")
+                .password(encoder.encode("password"))
+                .roles("USER", "ADMIN");*/
     }
 
     @Override
@@ -39,7 +52,8 @@ public class SpringSecurityConfiguration_Database
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/user/**")
+                //.antMatchers("/api/user/**")
+                .antMatchers("/api/user/**", "/h2-console")
                 .authenticated()
                 .and()
                 .httpBasic()
