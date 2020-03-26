@@ -1,4 +1,4 @@
-package com.web.app.dto;
+package com.web.app.model;
 
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -8,12 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "users")
-public class UserInfo {
+@Table(name = "users_login")
+public class User {
     @Id
     @GeneratedValue
     @Column(name = "userid")
-    private Long id;
+    private long id;
     @Column(name = "username")
     @NotEmpty
     private String username;
@@ -25,6 +25,9 @@ public class UserInfo {
     @Column(name = "role")
     private String role;
 
+    public long getId() {
+        return id;
+    }
     public String getUsername() {
         return username;
     }
@@ -48,5 +51,16 @@ public class UserInfo {
     }
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", isEnabled=" + isEnabled +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

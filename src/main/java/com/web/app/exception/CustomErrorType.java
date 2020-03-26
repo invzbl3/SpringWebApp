@@ -1,7 +1,6 @@
 package com.web.app.exception;
-import com.web.app.dto.UsersDTO;
 
-public class CustomErrorType extends UsersDTO {
+public class CustomErrorType {
     private String errorMessage;
     public CustomErrorType(final String errorMessage){
         this.errorMessage = errorMessage;
