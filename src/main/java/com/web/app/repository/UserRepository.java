@@ -1,10 +1,10 @@
 package com.web.app.repository;
 
-import com.web.app.dto.UsersDTO;
+import com.web.app.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserJpaRepository extends JpaRepository<UsersDTO, Long> {
-    UsersDTO findByName(String name);
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByUsername(String username);
 }
