@@ -2,15 +2,13 @@ package com.web.app.service;
 
 import com.web.app.dto.UserInfo;
 import com.web.app.repository.UserInfoJpaRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.Collection;
-import java.util.List;
+
+import java.util.Collections;
 
 @Service
 public class UserInfoDetailsService implements UserDetailsService {
@@ -21,7 +19,7 @@ public class UserInfoDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username)
+    public User loadUserByUsername(String username)
             throws UsernameNotFoundException {
         UserInfo user = userInfoJpaRepository.findByUsername(username);
         if (user == null) {
@@ -30,11 +28,9 @@ public class UserInfoDetailsService implements UserDetailsService {
         }
         return new User(
                 user.getUsername(), user.getPassword(),
-                getAuthorities(user));
+                Collections.singleton(getAuthorities(user)));
     }
-    private Collection<GrantedAuthority> getAuthorities(UserInfo user) {
-        List<GrantedAuthority> authorities;
-        authorities = AuthorityUtils.createAuthorityList(user.getRole());
-        return authorities;
+    private SimpleGrantedAuthority getAuthorities(UserInfo user) {
+        return new SimpleGrantedAuthority("ROLE_" + user.getRole());
     }
 }

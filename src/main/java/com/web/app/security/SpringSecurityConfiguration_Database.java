@@ -59,10 +59,7 @@ public class SpringSecurityConfiguration_Database
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
+        http.authorizeRequests()
                 //.antMatchers("/api/user/**")
                 .antMatchers("/api/user/**", "/h2-console/**").hasRole("ADMIN").anyRequest()
                 .authenticated()
