@@ -1,15 +1,19 @@
 package com.web.app.security;
 
 import com.web.app.service.UserInfoDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.postgresql.jdbc3.Jdbc3PoolingDataSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -19,10 +23,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class SpringSecurityConfiguration_Database
         extends WebSecurityConfigurerAdapter {
 
+
     private final UserInfoDetailsService userInfoDetailsService;
+    private BCryptPasswordEncoder passwordEncoder;
+    private DataSource dataSource;
 
     public SpringSecurityConfiguration_Database(UserInfoDetailsService userInfoDetailsService) {
         this.userInfoDetailsService = userInfoDetailsService;
+        this.dataSource = new Jdbc3PoolingDataSource();
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userInfoDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return authenticationProvider;
     }
 
     @Override
@@ -30,20 +47,12 @@ public class SpringSecurityConfiguration_Database
             AuthenticationManagerBuilder authenticationManagerBuilder)
             throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(userInfoDetailsService);
-     /*   PasswordEncoder encoder =
-                PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        authenticationManagerBuilder
                 .userDetailsService(userInfoDetailsService)
+                .passwordEncoder(passwordEncoder)
                 .and()
-                .inMemoryAuthentication()
-                .withUser("user")
-                .password(encoder.encode("password"))
-                .roles("USER")
-                .and()
-                .withUser("admin")
-                .password(encoder.encode("password"))
-                .roles("USER", "ADMIN");*/
+                .authenticationProvider(authenticationProvider())
+                .jdbcAuthentication()
+                .dataSource(dataSource);
     }
 
     @Override
@@ -53,7 +62,7 @@ public class SpringSecurityConfiguration_Database
                 .and()
                 .authorizeRequests()
                 //.antMatchers("/api/user/**")
-                .antMatchers("/api/user/**", "/h2-console")
+                .antMatchers("/api/user/**", "/h2-console/**").hasRole("ADMIN").anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic()

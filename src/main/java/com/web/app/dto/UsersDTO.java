@@ -11,7 +11,7 @@ public class UsersDTO {
 
     @Id
     @GeneratedValue
-    @Column(name = "USER_ID")
+    @Column(name = "ID")
     private Long id;
 
     @NotEmpty(message = "error.name.empty")
