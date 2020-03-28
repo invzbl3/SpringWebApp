@@ -31,7 +31,7 @@ public class SpringSecurityConfiguration_Database
     public SpringSecurityConfiguration_Database(UserInfoDetailsService userInfoDetailsService) {
         this.userInfoDetailsService = userInfoDetailsService;
         this.dataSource = new Jdbc3PoolingDataSource();
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B);
     }
 
     @Bean
