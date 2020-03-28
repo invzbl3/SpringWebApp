@@ -31,7 +31,7 @@ public class SpringSecurityConfiguration_Database
     public SpringSecurityConfiguration_Database(UserInfoDetailsService userInfoDetailsService) {
         this.userInfoDetailsService = userInfoDetailsService;
         this.dataSource = new Jdbc3PoolingDataSource();
-        this.passwordEncoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B);
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -39,6 +39,8 @@ public class SpringSecurityConfiguration_Database
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userInfoDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
+        String encoded = new BCryptPasswordEncoder().encode("password");
+        System.out.println(encoded);
         return authenticationProvider;
     }
 
