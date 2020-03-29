@@ -4,6 +4,7 @@ import com.web.app.dto.UserInfo;
 import com.web.app.repository.UserInfoJpaRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class UserInfoDetailsService implements UserDetailsService {
     }
 
     @Override
-    public User loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
         UserInfo user = userInfoJpaRepository.findByUsername(username);
         if (user == null) {
