@@ -1,3 +1,68 @@
+app.controller('homeController', function ($rootScope, $scope,
+                                           $http, $location) {
+
+    if ($rootScope.authenticated) {
+        $location.path("/");
+        $scope.loginerror = false;
+    } else {
+        $location.path("/login");
+        $scope.loginerror = true;
+    }
+});
+
+app.controller('loginController', function ($rootScope, $scope,
+                                            $http, $location) {
+    $scope.credentials = {};
+
+    $scope.resetForm = function () {
+        $scope.credentials = null;
+    };
+
+    const authenticate = function (credentials, callback) {
+        const headers = $scope.credentials ? {
+            authorization: "Basic "
+                + btoa($scope.credentials.username + ":"
+                    + $scope.credentials.password)
+        } : {};
+
+        $http.get('user', {
+            headers: headers
+        }).then(function (response) {
+            if (response.data.name) {
+                $rootScope.authenticated = true;
+            } else {
+                $rootScope.authenticated = false;
+            }
+            callback && callback();
+        }, function () {
+            $rootScope.authenticated = false;
+            callback && callback();
+        });
+    };
+
+    authenticate();
+
+    $scope.loginUser = function () {
+        authenticate($scope.credentials, function () {
+            if ($rootScope.authenticated) {
+                $location.path("/");
+                $scope.loginerror = false;
+            } else {
+                $location.path("/login");
+                $scope.loginerror = true;
+            }
+        });
+    };
+});
+
+app.controller('logoutController', function ($rootScope, $scope,
+                                             $http, $location) {
+    $http.post('logout', {}).finally(function () {
+        $rootScope.authenticated = false;
+        $location.path("/");
+    });
+});
+
 app.controller('registerUserController', function ($scope, $http, $location,
                                                    $route) {
     $scope.submitUserForm = function () {

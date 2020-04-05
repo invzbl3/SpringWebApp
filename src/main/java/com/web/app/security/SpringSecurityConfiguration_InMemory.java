@@ -1,4 +1,3 @@
-/*
 package com.web.app.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,4 +42,4 @@ public class SpringSecurityConfiguration_InMemory extends WebSecurityConfigurerA
                 .csrf()
                 .disable();
     }
-}*/
+}
