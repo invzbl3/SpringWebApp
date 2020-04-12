@@ -1,3 +1,4 @@
+/*
 package com.web.app.client;
 
 import com.web.app.dto.UsersDTO;
@@ -83,3 +84,4 @@ public class UserRegistrationSystemClientApplication {
                 "User-ID" + user.getId() + " User-Name" + user.getName());
     }
 }
+*/
