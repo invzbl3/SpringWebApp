@@ -1,4 +1,4 @@
-package client;
+package com.web.app.client;
 
 import com.web.app.dto.UsersDTO;
 import org.springframework.http.HttpEntity;

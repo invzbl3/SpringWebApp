@@ -1,11 +1,11 @@
 /*
-package client;
+package com.web.app.client;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.com.web.app.client.RestTemplate;
 
 public class UserRegistrationClientBasicAuth {
 

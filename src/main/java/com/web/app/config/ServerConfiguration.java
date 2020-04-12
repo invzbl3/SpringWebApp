@@ -1,11 +1,11 @@
-package com.web.app;
+package com.web.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-public class UserRegistrationConfiguration {
+public class ServerConfiguration {
     @Bean(name = "messageSource")
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageBundle =
